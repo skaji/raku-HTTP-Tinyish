@@ -7,7 +7,9 @@
     "HTTP::Tinyish::Base" : "lib/HTTP/Tinyish/Base.pm6",
     "HTTP::Tinyish" : "lib/HTTP/Tinyish.pm6"
   },
-  "depends" : [ ],
+  "depends" : [
+    "File::Temp"
+  ],
   "description" : "",
   "version" : "*",
   "authors" : [
