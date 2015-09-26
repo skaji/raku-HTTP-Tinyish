@@ -108,7 +108,7 @@ method !build-options($url, *%opts) {
     |@options;
 }
 
-method !translate-headers(%headers, @options is rw) {
+method !translate-headers(%headers, @options is raw) {
     for %headers.kv -> $field, $value {
         if $value ~~ Positional {
             @options.push( $value.map({|("-H", "$field:$_")}) );
