@@ -111,7 +111,7 @@ method !build-options($url, *%opts) {
 method !translate-headers(%headers, @options) {
     for %headers.kv -> $field, $value {
         if $value ~~ Positional {
-            @options.push( $value.map({|("-H", "$field:$_")}) );
+            @options.append( $value.map({|("-H", "$field:$_")}) );
         } else {
             @options.push("-H", "$field:$value");
         }
