@@ -10,7 +10,7 @@
   "depends" : [
     "File::Temp"
   ],
-  "description" : "",
+  "description" : "perl6 port of HTTP::Tinyish",
   "version" : "*",
   "authors" : [
     "Shoichi Kaji"
