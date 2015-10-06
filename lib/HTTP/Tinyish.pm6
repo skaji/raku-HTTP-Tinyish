@@ -1,9 +1,9 @@
 use v6;
 unit class HTTP::Tinyish;
+use HTTP::Tinyish::Curl;
 
 method new(*%opt) {
-    require HTTP::Tinyish::Curl;
-    ::("HTTP::Tinyish::Curl").new(|%opt);
+    HTTP::Tinyish::Curl.new(|%opt);
 }
 
 =begin pod
