@@ -30,6 +30,21 @@ subtest {
 };
 
 subtest {
+    my ($file, $fh) = tempfile;
+    $fh.print("あいうえお\n");
+    $fh.close;
+    my $url = "http://httpbin.org/put";
+    my %res = HTTP::Tinyish.new.put: $url,
+        headers => { 'Content-Type' => 'text/plain; charset=utf-8' },
+        content => $file.IO.slurp(:bin),
+        bin     => True,
+    ;
+    is %res<status>, 200;
+    does-ok %res<content>, Buf;
+    is-deeply from-json(%res<content>.decode)<data>, "あいうえお\n";
+};
+
+subtest {
     my $url = "http://foo.bar.example.com/does-not-exists";
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 599;
