@@ -1,12 +1,11 @@
 use v6;
 unit class HTTP::Tinyish::Base;
 
-method get($url,    *%opts) { self.request('GET',     $url, |%opts) }
-method head($url,   *%opts) { self.request('HEAD',    $url, |%opts) }
-method put($url,    *%opts) { self.request('PUT',     $url, |%opts) }
-method post($url,   *%opts) { self.request('POST',    $url, |%opts) }
-method delete($url, *%opts) { self.request('DELETE',  $url, |%opts) }
-
+for <get head put post delete> -> $method {
+    ::?CLASS.^add_method: $method, method ($url, *%opts) {
+        self.request($method.uc, $url, |%opts);
+    };
+};
 
 method parse-http-header($header is copy, %res) {
     # it might have multiple headers in it because of redirects
