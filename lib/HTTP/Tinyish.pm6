@@ -2,8 +2,16 @@ use v6;
 unit class HTTP::Tinyish;
 use HTTP::Tinyish::Curl;
 
+has $.backend handles <request get head put post delete mirror>;
+
+# TODO:
+# perl5 HTTP::Tinyish's main feature is to select backends according to scheme (http/https).
+# perl6 HTTP::Tinyish should follow that.
+# But there is only 1 backend right now, ooops!
+
 method new(*%opt) {
-    HTTP::Tinyish::Curl.new(|%opt);
+    my $backend = HTTP::Tinyish::Curl.new(|%opt);
+    self.bless(:$backend);
 }
 
 =begin pod
