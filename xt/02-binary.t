@@ -7,7 +7,10 @@ subtest {
     my $url = "http://doc.perl6.org/images/camelia.png";
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 200;
-    does-ok %res<content>, Buf;
+    my $buf = %res<content>;
+    does-ok $buf, Buf;
+    my $file-type = $buf.subbuf(1, 3).decode;
+    is $file-type, "PNG";
 };
 
 subtest {
