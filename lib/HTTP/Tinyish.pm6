@@ -35,6 +35,29 @@ HTTP::Tinyish - perl6 port of HTTP::Tinyish
 HTTP::Tinyish is perl6 port of L<https://github.com/miyagawa/HTTP-Tinyish>.
 Currently only support curl.
 
+=head2 Str VS Buf
+
+Perl6 distinguishes Str from Buf.
+HTTP::Tinyish handles data as Str by default
+(that is, encode/decode utf-8 if needed by default).
+If you want to handle data as Buf, please follow the instruction below.
+
+If you want to send Buf content, just specify Buf in content:
+
+   my $binary-data = "file.bin".IO.slurp(:bin);
+   $http.post:
+      "http://example.com/post",
+      content => $binary-data,
+   ;
+
+If you want to recieve http content as Buf, then call request/get/post/... method with
+C<< bin => True >>:
+
+   my %res = $http.get("http://example.com/image.png", bin => True);
+   does-ok %res<content>, Buf; # pass
+
+And decode C<< %res<content> >> by yourself if you want.
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2015 Shoichi Kaji <skaji@cpan.org>
