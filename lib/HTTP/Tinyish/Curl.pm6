@@ -27,7 +27,7 @@ method !cleanup-tempfiles() {
     @!tempfiles = ();
 }
 
-method request($method, $url, *%opts) {
+method request($method, $url, Bool :$bin = False, *%opts) {
     LEAVE { self!cleanup-tempfiles }
     my ($out-file, $out-fh) = self!tempfile;
     my ($err-file, $err-fh) = self!tempfile;
@@ -43,16 +43,16 @@ method request($method, $url, *%opts) {
     warn "=> @cmd[]" if DEBUG;
     my $status = run |@cmd, :out($out-fh), :err($err-fh);
     $_.close for $out-fh, $err-fh; # XXX
-    if ($status.exitcode != 0) {
-        my $err = $err-file.IO.slurp;
+    if $status.exitcode != 0 {
+        my $err = $err-file.IO.slurp(:$bin);
         return self.internal-error($url, $err);
     }
-    my %res = url => $url, content => $out-file.IO.slurp;
+    my %res = url => $url, content => $out-file.IO.slurp(:$bin);
     self.parse-http-header($header-file.IO.slurp, %res);
     return %res;
 }
 
-method mirror($url, $file, *%opts) {
+method mirror($url, $file, Bool :$bin = False, *%opts) {
     LEAVE { self!cleanup-tempfiles }
     my ($out-file, $out-fh) = self!tempfile;
     my ($err-file, $err-fh) = self!tempfile;
@@ -69,14 +69,13 @@ method mirror($url, $file, *%opts) {
     my $status = run |@cmd, :out($out-fh), :err($err-fh);
     $_.close for $out-fh, $err-fh; # XXX
     if ($status.exitcode != 0) {
-        my $err = $err-file.IO.slurp;
+        my $err = $err-file.IO.slurp(:$bin);
         return self.internal-error($url, $err);
     }
-    my %res = url => $url, content => $out-file.IO.slurp;
+    my %res = url => $url, content => $out-file.IO.slurp(:$bin);
     self.parse-http-header($header-file.IO.slurp, %res);
     return %res;
 }
-
 
 method !build-options($url, *%opts) {
     my %headers;
@@ -97,15 +96,15 @@ method !build-options($url, *%opts) {
     self!translate-headers(%headers, @options);
     @options.push("--insecure") unless $.verify-ssl;
     if %opts<content>:exists {
-        my $content = "";
+        my ($data-file, $data-fh) = self!tempfile;
         if %opts<content> ~~ Callable {
             while %opts<content>() -> $chunk {
-                $content ~= $chunk;
+                $data-fh.write($chunk ~~ Str ?? $chunk.encode !! $chunk);
             }
         } else {
-            $content = %opts<content>;
+            $data-fh.write(%opts<content> ~~ Str ?? %opts<content>.encode !! %opts<content>);
         }
-        @options.push('--data', $content);
+        @options.push('--data-binary', "\@$data-file");
     }
     |@options;
 }

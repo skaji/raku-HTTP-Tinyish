@@ -63,9 +63,11 @@ method parse-http-header($header is copy, %res) {
 }
 
 method internal-error($url, $message) {
+    my $length = $message ~~ Buf ?? $message.elems !! $message.chars;
+    # XXX content-type?
     my %res =
         content => $message,
-        headers => { "content-length" => $message.chars, "content-type" => "text/plain" },
+        headers => { "content-length" => $length, "content-type" => "text/plain" },
         reason  => "Internal Exception",
         status  => 599,
         success => False,
