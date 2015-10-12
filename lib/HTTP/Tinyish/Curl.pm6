@@ -12,18 +12,26 @@ has Int $.max-redirect = 5;
 has $.agent = $?PACKAGE.perl;
 has %.default-headers;
 has Bool $.verify-ssl = True;
+has @!tempfiles; # cleanup each request
+
+method !tempfile() {
+    my ($file, $fh) = tempfile(:!unlink);
+    @!tempfiles.push( [$file, $fh] );
+    $file, $fh;
+}
+method !cleanup-tempfiles() {
+    for @!tempfiles -> $tempfile {
+        $tempfile[0].IO.unlink if $tempfile[0].defined && $tempfile[0].IO.e;
+        $tempfile[1].close     if $tempfile[1].defined;
+    }
+    @!tempfiles = ();
+}
 
 method request($method, $url, *%opts) {
-    my ($out-file, $out-fh);
-    my ($err-file, $err-fh);
-    my ($header-file, $header-fh);
-    LEAVE {
-        $_.close for grep {.defined}, $out-fh, $err-fh, $header-fh;
-        unlink $_ for grep {.defined && .IO.e}, $out-file, $err-file, $header-file;
-    }
-    ($out-file, $out-fh) = tempfile(:!unlink);
-    ($err-file, $err-fh) = tempfile(:!unlink);
-    ($header-file, $header-fh) = tempfile(:!unlink);
+    LEAVE { self!cleanup-tempfiles }
+    my ($out-file, $out-fh) = self!tempfile;
+    my ($err-file, $err-fh) = self!tempfile;
+    my ($header-file, $header-fh) = self!tempfile;
     my @cmd =
         $!curl,
         "-X", $method,
@@ -45,16 +53,10 @@ method request($method, $url, *%opts) {
 }
 
 method mirror($url, $file, *%opts) {
-    my ($out-file, $out-fh);
-    my ($err-file, $err-fh);
-    my ($header-file, $header-fh);
-    LEAVE {
-        $_.close for grep {.defined}, $out-fh, $err-fh, $header-fh;
-        unlink $_ for grep {.defined && .IO.e}, $out-file, $err-file, $header-file;
-    }
-    ($out-file, $out-fh) = tempfile(:!unlink);
-    ($err-file, $err-fh) = tempfile(:!unlink);
-    ($header-file, $header-fh) = tempfile(:!unlink);
+    LEAVE { self!cleanup-tempfiles }
+    my ($out-file, $out-fh) = self!tempfile;
+    my ($err-file, $err-fh) = self!tempfile;
+    my ($header-file, $header-fh) = self!tempfile;
     my @cmd =
         $!curl,
         self!build-options($url, |%opts),
