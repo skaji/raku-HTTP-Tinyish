@@ -1,11 +1,13 @@
 use v6;
 unit class HTTP::Tinyish::Base;
 
-for <get head put post delete> -> $method {
-    ::?CLASS.^add_method: $method, method ($url, *%opts) {
-        self.request($method.uc, $url, |%opts);
-    };
-};
+BEGIN {
+    for <get head put post delete> -> $method {
+        ::?CLASS.^add_method: $method, method ($url, *%opts) {
+            self.request($method.uc, $url, |%opts);
+        };
+    }
+}
 
 method parse-http-header($header is copy, %res) {
     # it might have multiple headers in it because of redirects
