@@ -1,6 +1,6 @@
 use v6;
 use HTTP::Tinyish::Base;
-use File::Temp;
+use HTTP::Tinyish::FileTempFactory;
 
 unit class HTTP::Tinyish::Curl is HTTP::Tinyish::Base;
 
@@ -12,26 +12,13 @@ has Int $.max-redirect = 5;
 has $.agent = $?PACKAGE.perl;
 has %.default-headers;
 has Bool $.verify-ssl = True;
-has @!tempfiles; # cleanup each request
-
-method !tempfile() {
-    my ($file, $fh) = tempfile(:!unlink);
-    @!tempfiles.push( [$file, $fh] );
-    $file, $fh;
-}
-method !cleanup-tempfiles() {
-    for @!tempfiles -> $tempfile {
-        $tempfile[0].IO.unlink if $tempfile[0].defined && $tempfile[0].IO.e;
-        $tempfile[1].close     if $tempfile[1].defined;
-    }
-    @!tempfiles = ();
-}
+has $!factory = HTTP::Tinyish::FileTempFactory.new;
 
 method request($method, $url, Bool :$bin = False, *%opts) {
-    LEAVE { self!cleanup-tempfiles }
-    my ($out-file, $out-fh) = self!tempfile;
-    my ($err-file, $err-fh) = self!tempfile;
-    my ($header-file, $header-fh) = self!tempfile;
+    LEAVE { $!factory.cleanup }
+    my ($out-file, $out-fh) = $!factory.tempfile;
+    my ($err-file, $err-fh) = $!factory.tempfile;
+    my ($header-file, $header-fh) = $!factory.tempfile;
     my @cmd =
         $!curl,
         "-X", $method,
@@ -53,10 +40,10 @@ method request($method, $url, Bool :$bin = False, *%opts) {
 }
 
 method mirror($url, $file, Bool :$bin = False, *%opts) {
-    LEAVE { self!cleanup-tempfiles }
-    my ($out-file, $out-fh) = self!tempfile;
-    my ($err-file, $err-fh) = self!tempfile;
-    my ($header-file, $header-fh) = self!tempfile;
+    LEAVE { $!factory.cleanup }
+    my ($out-file, $out-fh) = $!factory.tempfile;
+    my ($err-file, $err-fh) = $!factory.tempfile;
+    my ($header-file, $header-fh) = $!factory.tempfile;
     my @cmd =
         $!curl,
         self!build-options($url, |%opts),
@@ -96,7 +83,7 @@ method !build-options($url, *%opts) {
     self!translate-headers(%headers, @options);
     @options.push("--insecure") unless $.verify-ssl;
     if %opts<content>:exists {
-        my ($data-file, $data-fh) = self!tempfile;
+        my ($data-file, $data-fh) = $!factory.tempfile;
         if %opts<content> ~~ Callable {
             while %opts<content>() -> $chunk {
                 $data-fh.write($chunk ~~ Str ?? $chunk.encode !! $chunk);
