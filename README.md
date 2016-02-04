@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/shoichikaji/perl6-HTTP-Tinyish.svg?branch=master)](https://travis-ci.org/shoichikaji/perl6-HTTP-Tinyish)
+[![Build Status](https://travis-ci.org/skaji/perl6-HTTP-Tinyish.svg?branch=master)](https://travis-ci.org/skaji/perl6-HTTP-Tinyish)
 
 NAME
 ====
