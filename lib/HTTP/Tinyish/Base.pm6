@@ -74,5 +74,5 @@ method internal-error($url, $message) {
         success => False,
         url     => $url,
     ;
-    |%res;
+    %res;
 }
