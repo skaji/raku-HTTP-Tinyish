@@ -40,6 +40,7 @@ method parse-http-header($header is copy, %res) {
     %res<reason> = $reason;
     %res<success> = so $status ~~ /^[2|304]/;
     %res<headers> //= {};
+    %res<protocol> = $proto;
 
     # import headers
     my $token = rx:P5/[^][\x00-\x1f\x7f()<>@,;:\\"\/?={} \t]+/; # 
