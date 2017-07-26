@@ -5,7 +5,7 @@ use File::Temp;
 use JSON::Pretty;
 
 subtest {
-    my $url = "http://doc.perl6.org/images/camelia.png";
+    my $url = "https://doc.perl6.org/images/camelia.png";
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 200;
     my $buf = %res<content>;
@@ -15,7 +15,7 @@ subtest {
 };
 
 subtest {
-    my $url = "http://blogs.yahoo.co.jp/"; # euc-jp
+    my $url = "https://blogs.yahoo.co.jp/"; # euc-jp
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 200;
     does-ok %res<content>, Buf;
@@ -57,7 +57,7 @@ subtest {
 
 subtest {
     my ($file, $) = tempfile;
-    my $url = "http://blogs.yahoo.co.jp/"; # euc-jp
+    my $url = "https://blogs.yahoo.co.jp/"; # euc-jp
     my %res = HTTP::Tinyish.new.mirror($url, $file);
     is %res<status>, 200;
     like %res<headers><content-type>, rx:i/euc\-jp/;
