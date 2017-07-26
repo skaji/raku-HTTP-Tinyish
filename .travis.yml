@@ -7,6 +7,7 @@ perl6:
 install:
   - rakudobrew build zef
   - zef install --deps-only --/test .
+  - zef install --/test JSON::Pretty
 script:
   - PERL6LIB=$PWD/lib prove -e perl6 -r t/ xt/
 sudo: false

@@ -2,7 +2,7 @@ use v6;
 use HTTP::Tinyish;
 use Test;
 use File::Temp;
-use JSON::Fast;
+use JSON::Pretty;
 
 subtest {
     my $url = "http://doc.perl6.org/images/camelia.png";

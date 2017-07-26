@@ -2,7 +2,7 @@ use v6;
 use Test;
 use HTTP::Tinyish;
 use File::Temp;
-use JSON::Fast;
+use JSON::Pretty;
 
 my %res = await HTTP::Tinyish.new(:async).get("http://www.cpan.org");
 is %res<status>, 200;
