@@ -26,13 +26,14 @@ is %res<status>, 200;
 is %res<status>, 200;
 is-deeply from-json(%res<content>)<form>, { foo => "1", bar => "2" };
 
-my @data = "xyz\n", "xyz";
-%res = await HTTP::Tinyish.new(:async, timeout => 1).post: "http://httpbin.org/post",
-    headers => { 'Content-Type' => 'application/octet-stream' },
-    content => sub { @data.shift },
-;
-is %res<status>, 200;
-is-deeply from-json(%res<content>)<data>, "xyz\nxyz";
+# XXX
+# my @data = "xyz\n", "xyz";
+# %res = await HTTP::Tinyish.new(:async, timeout => 1).post: "http://httpbin.org/post",
+#     headers => { 'Content-Type' => 'application/octet-stream' },
+#     content => sub { @data.shift },
+# ;
+# is %res<status>, 200;
+# is-deeply from-json(%res<content>)<data>, "xyz\nxyz";
 
 %res = await HTTP::Tinyish.new(:async).put: "http://httpbin.org/put",
     headers => { 'Content-Type' => 'text/plain' },
