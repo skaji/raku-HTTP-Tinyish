@@ -6,6 +6,14 @@ use JSON::Pretty;
 
 my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
 
+if $HTTBIN_HOST eq "httpbin.org" {
+    my $proc = run <curl -m 2 -sSL http://httpbin.org>, :err, :!out;
+    if $proc.exitcode != 0 {
+        plan skip-all => $proc.err.slurp(:close);
+        exit;
+    }
+}
+
 my %res = await HTTP::Tinyish.new(:async).get("http://www.cpan.org");
 is %res<status>, 200;
 like %res<content>, rx/Comprehensive/;
