@@ -19,7 +19,9 @@
   },
   "resources" : [ ],
   "source-url" : "git://github.com/skaji/perl6-HTTP-Tinyish.git",
-  "tags" : [ "CPAN5" ],
+  "tags" : [
+    "CPAN5"
+  ],
   "test-depends" : [ ],
-  "version" : "0.1.1"
+  "version" : "0.1.2"
 }
