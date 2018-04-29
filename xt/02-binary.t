@@ -4,8 +4,10 @@ use Test;
 use File::Temp;
 use JSON::Pretty;
 
+my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
+
 subtest {
-    my $url = "https://doc.perl6.org/images/camelia.png";
+    my $url = "https://doc.perl6.org/images/camelia-small.png";
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 200;
     my $buf = %res<content>;
@@ -24,7 +26,7 @@ subtest {
 };
 
 subtest {
-    my $url = "http://httpbin.org/put";
+    my $url = "http://$HTTBIN_HOST/put";
     my %res = HTTP::Tinyish.new.put: $url,
         headers => { 'Content-Type' => 'text/plain; charset=utf-8' },
         content => "あいうえお".encode,
@@ -37,7 +39,7 @@ subtest {
     my ($file, $fh) = tempfile;
     $fh.print("あいうえお\n");
     $fh.close;
-    my $url = "http://httpbin.org/put";
+    my $url = "http://$HTTBIN_HOST/put";
     my %res = HTTP::Tinyish.new.put: $url,
         headers => { 'Content-Type' => 'text/plain; charset=utf-8' },
         content => $file.IO.slurp(:bin),
