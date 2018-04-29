@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  rakudo-star:
+    image: rakudo-star
+    depends_on:
+      - httpbin
+    links:
+      - httpbin:httpbin
+  httpbin:
+    image: kennethreitz/httpbin
+    ports:
+      - "8080:8080"

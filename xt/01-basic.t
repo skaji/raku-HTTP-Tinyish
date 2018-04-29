@@ -4,6 +4,8 @@ use HTTP::Tinyish;
 use File::Temp;
 use JSON::Pretty;
 
+my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
+
 my %res = HTTP::Tinyish.new.get("http://www.cpan.org");
 is %res<status>, 200;
 like %res<content>, rx/Comprehensive/;
@@ -21,10 +23,10 @@ like %res<content>, rx:i/google.com/;
 is %res<status>, 200;
 like %res<content>, rx:i/Comprehensive/;
 
-%res = HTTP::Tinyish.new.head("http://httpbin.org/headers");
+%res = HTTP::Tinyish.new.head("http://$HTTBIN_HOST/headers");
 is %res<status>, 200;
 
-%res = HTTP::Tinyish.new.post: "http://httpbin.org/post",
+%res = HTTP::Tinyish.new.post: "http://$HTTBIN_HOST/post",
     headers => { 'Content-Type' => 'application/x-www-form-urlencoded' },
     content => "foo=1&bar=2",
 ;
@@ -40,7 +42,7 @@ is-deeply from-json(%res<content>)<form>, { foo => "1", bar => "2" };
 # is %res<status>, 200;
 # is-deeply from-json(%res<content>)<data>, "xyz\nxyz";
 
-%res = HTTP::Tinyish.new.put: "http://httpbin.org/put",
+%res = HTTP::Tinyish.new.put: "http://$HTTBIN_HOST/put",
     headers => { 'Content-Type' => 'text/plain' },
     content => "foobarbaz",
 ;
@@ -48,7 +50,7 @@ is %res<status>, 200;
 is-deeply from-json(%res<content>)<data>, "foobarbaz";
 
 %res = HTTP::Tinyish.new(default-headers => { "Foo" => "Bar", Dnt => "1" })\
-    .get("http://httpbin.org/headers", headers => { "Foo" => ["Bar", "Baz"] });
+    .get("http://$HTTBIN_HOST/headers", headers => { "Foo" => ["Bar", "Baz"] });
 # is from-json(%res<content>)<headers><Foo>, "Bar,Baz"; XXX
 is from-json(%res<content>)<headers><Dnt>, "1";
 
@@ -61,34 +63,34 @@ like $fn.IO.slurp, rx/Comprehensive/;
 is %res<status>, 304;
 is %res<success>, True;
 
-%res = HTTP::Tinyish.new(agent => "Menlo/1").get("http://httpbin.org/user-agent");
+%res = HTTP::Tinyish.new(agent => "Menlo/1").get("http://$HTTBIN_HOST/user-agent");
 is-deeply from-json(%res<content>), { 'user-agent' => "Menlo/1" };
 
-%res = HTTP::Tinyish.new.get("http://httpbin.org/status/404");
+%res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/status/404");
 is %res<status>, 404;
 is %res<reason>, "NOT FOUND";
 is %res<success>, False;
 
-%res = HTTP::Tinyish.new.get("http://httpbin.org/response-headers?Foo=Bar+Baz");
+%res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/response-headers?Foo=Bar+Baz");
 is %res<headers><foo>, "Bar Baz";
 
-%res = HTTP::Tinyish.new.get("http://httpbin.org/basic-auth/user/passwd");
+%res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/basic-auth/user/passwd");
 is %res<status>, 401;
 
-%res = HTTP::Tinyish.new.get("http://user:passwd@httpbin.org/basic-auth/user/passwd");
+%res = HTTP::Tinyish.new.get("http://user:passwd@$HTTBIN_HOST/basic-auth/user/passwd");
 is %res<status>, 200;
 is-deeply from-json(%res<content>), { authenticated => True, user => "user" };
 
-%res = HTTP::Tinyish.new.get("http://httpbin.org/redirect/1");
+%res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/redirect/1");
 is %res<status>, 200;
 
-%res = HTTP::Tinyish.new(max-redirect => 2).get("http://httpbin.org/redirect/3");
+%res = HTTP::Tinyish.new(max-redirect => 2).get("http://$HTTBIN_HOST/redirect/3");
 isnt %res<status>, 200; # either 302 or 599
 
-%res = HTTP::Tinyish.new(timeout => 1).get("http://httpbin.org/delay/2");
+%res = HTTP::Tinyish.new(timeout => 1).get("http://$HTTBIN_HOST/delay/2");
 like %res<status>.Str, rx/^5/;
 
-%res = HTTP::Tinyish.new.get("http://httpbin.org/encoding/utf8");
+%res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/encoding/utf8");
 like %res<content>, rx/コンニチハ/;
 
 done-testing;

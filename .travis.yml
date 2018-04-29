@@ -1,13 +1,15 @@
-language: perl6
-os:
-  - linux
-  - osx
-perl6:
-  - latest
-install:
-  - rakudobrew build zef
-  - zef install --deps-only --/test .
-  - zef install --/test JSON::Pretty
+language: generic
+sudo: required
+services:
+  - docker
+before_install:
+  - docker-compose up --exit-code-from rakudo-star
 script:
-  - PERL6LIB=$PWD/lib prove -e perl6 -r t/ xt/
-sudo: false
+  - |
+    docker-compose run -v $PWD:/$TRAVIS_REPO_SLUG -w /$TRAVIS_REPO_SLUG rakudo-star bash -c '
+    set -ex
+    perl6 -v
+    zef install --deps-only --/test .
+    zef install --/test JSON::Pretty
+    PERL6LIB=$PWD/lib HTTPBIN_HOST=httpbin:8080 prove -e perl6 -vr t/ xt/
+    '
