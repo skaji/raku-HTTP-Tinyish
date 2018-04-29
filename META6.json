@@ -20,5 +20,5 @@
   "source-url" : "git://github.com/skaji/perl6-HTTP-Tinyish.git",
   "tags" : [ ],
   "test-depends" : [ ],
-  "version" : "0.1.0"
+  "version" : "0.1.1"
 }

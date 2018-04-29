@@ -1,5 +1,5 @@
 use v6;
-unit class HTTP::Tinyish:ver<0.1.0>;
+unit class HTTP::Tinyish:ver<0.1.1>;
 use HTTP::Tinyish::Curl;
 
 has $.backend handles <request get head put post delete mirror>;
