@@ -5,7 +5,8 @@
   ],
   "build-depends" : [ ],
   "depends" : [
-    "File::Temp"
+    "File::Temp",
+    "curl:from<bin>"
   ],
   "description" : "perl6 port of HTTP::Tinyish",
   "license" : "Artistic-2.0",
