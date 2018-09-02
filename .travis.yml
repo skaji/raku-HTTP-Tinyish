@@ -9,7 +9,8 @@ script:
     docker-compose run -v $PWD:/$TRAVIS_REPO_SLUG -w /$TRAVIS_REPO_SLUG rakudo-star bash -c '
     set -ex
     perl6 -v
+    zef upgrade --/test zef
     zef install --deps-only --/test .
     zef install --/test JSON::Pretty
-    PERL6LIB=$PWD/lib HTTPBIN_HOST=httpbin:8080 prove -e perl6 -vr t/ xt/
+    PERL6LIB=$PWD/lib HTTPBIN_HOST=httpbin prove -e perl6 -vr t/ xt/
     '
