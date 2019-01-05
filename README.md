@@ -10,41 +10,45 @@ SYNOPSIS
 
 Synchronous way:
 
-    my $http = HTTP::Tinyish.new(agent => "Mozilla/4.0");
+```perl6
+my $http = HTTP::Tinyish.new(agent => "Mozilla/4.0");
 
-    my %res = $http.get("http://www.cpan.org/");
-    warn %res<status>;
+my %res = $http.get("http://www.cpan.org/");
+warn %res<status>;
 
-    $http.post:
-      "http://example.com/post",
-      headers => { "Content-Type" => "application/x-www-form-urlencoded" },
-      content => "foo=bar&baz=quux",
-    ;
+$http.post:
+  "http://example.com/post",
+  headers => { "Content-Type" => "application/x-www-form-urlencoded" },
+  content => "foo=bar&baz=quux",
+;
 
-    $http.mirror:
-      "http://www.cpan.org/modules/02packages.details.txt.gz",
-      "./02packages.details.txt.gz",
-    ;
+$http.mirror:
+  "http://www.cpan.org/modules/02packages.details.txt.gz",
+  "./02packages.details.txt.gz",
+;
+```
 
 Asynchronous way:
 
-    my $http = HTTP::Tinyish.new(:async);
+```perl6
+my $http = HTTP::Tinyish.new(:async);
 
-    my @url = <
-      http://perl6.org/
-      https://doc.perl6.org/
-      http://design.perl6.org/
-    >;
+my @url = <
+  http://perl6.org/
+  https://doc.perl6.org/
+  http://design.perl6.org/
+>;
 
-    my @promise = @url.map: -> $url {
-      $http.get($url).then: -> $promise {
-        my %res = $promise.result;
-        say "Done %res<status> %res<url>";
-        %res;
-      };
-    };
+my @promise = @url.map: -> $url {
+  $http.get($url).then: -> $promise {
+    my %res = $promise.result;
+    say "Done %res<status> %res<url>";
+    %res;
+  };
+};
 
-    my @res = await @promise;
+my @res = await @promise;
+```
 
 DESCRIPTION
 ===========
@@ -58,16 +62,20 @@ Perl6 distinguishes Str from Buf. HTTP::Tinyish handles data as Str by default (
 
 If you want to send Buf content, just specify Buf in content:
 
-    my $binary-data = "file.bin".IO.slurp(:bin);
-    $http.post:
-       "http://example.com/post",
-       content => $binary-data,
-    ;
+```perl6
+my $binary-data = "file.bin".IO.slurp(:bin);
+$http.post:
+  "http://example.com/post",
+  content => $binary-data,
+;
+```
 
 If you want to recieve http content as Buf, then call request/get/post/... method with `bin => True `:
 
-    my %res = $http.get("http://example.com/image.png", bin => True);
-    does-ok %res<content>, Buf; # pass
+```perl6
+my %res = $http.get("http://example.com/image.png", bin => True);
+does-ok %res<content>, Buf; # pass
+```
 
 And decode `%res<content> ` by yourself if you want.
 

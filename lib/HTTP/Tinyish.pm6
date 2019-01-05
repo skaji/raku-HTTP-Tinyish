@@ -24,41 +24,49 @@ HTTP::Tinyish - perl6 port of HTTP::Tinyish
 
 Synchronous way:
 
-  my $http = HTTP::Tinyish.new(agent => "Mozilla/4.0");
+=begin code :lang<perl6>
 
-  my %res = $http.get("http://www.cpan.org/");
-  warn %res<status>;
+my $http = HTTP::Tinyish.new(agent => "Mozilla/4.0");
 
-  $http.post:
-    "http://example.com/post",
-    headers => { "Content-Type" => "application/x-www-form-urlencoded" },
-    content => "foo=bar&baz=quux",
-  ;
+my %res = $http.get("http://www.cpan.org/");
+warn %res<status>;
 
-  $http.mirror:
-    "http://www.cpan.org/modules/02packages.details.txt.gz",
-    "./02packages.details.txt.gz",
-  ;
+$http.post:
+  "http://example.com/post",
+  headers => { "Content-Type" => "application/x-www-form-urlencoded" },
+  content => "foo=bar&baz=quux",
+;
+
+$http.mirror:
+  "http://www.cpan.org/modules/02packages.details.txt.gz",
+  "./02packages.details.txt.gz",
+;
+
+=end code
 
 Asynchronous way:
 
-  my $http = HTTP::Tinyish.new(:async);
+=begin code :lang<perl6>
 
-  my @url = <
-    http://perl6.org/
-    https://doc.perl6.org/
-    http://design.perl6.org/
-  >;
+my $http = HTTP::Tinyish.new(:async);
 
-  my @promise = @url.map: -> $url {
-    $http.get($url).then: -> $promise {
-      my %res = $promise.result;
-      say "Done %res<status> %res<url>";
-      %res;
-    };
+my @url = <
+  http://perl6.org/
+  https://doc.perl6.org/
+  http://design.perl6.org/
+>;
+
+my @promise = @url.map: -> $url {
+  $http.get($url).then: -> $promise {
+    my %res = $promise.result;
+    say "Done %res<status> %res<url>";
+    %res;
   };
+};
 
-  my @res = await @promise;
+my @res = await @promise;
+
+=end code
 
 =head1 DESCRIPTION
 
@@ -74,17 +82,25 @@ If you want to handle data as Buf, please follow the instruction below.
 
 If you want to send Buf content, just specify Buf in content:
 
-   my $binary-data = "file.bin".IO.slurp(:bin);
-   $http.post:
-      "http://example.com/post",
-      content => $binary-data,
-   ;
+=begin code :lang<perl6>
+
+my $binary-data = "file.bin".IO.slurp(:bin);
+$http.post:
+  "http://example.com/post",
+  content => $binary-data,
+;
+
+=end code
 
 If you want to recieve http content as Buf, then call request/get/post/... method with
 C<< bin => True >>:
 
-   my %res = $http.get("http://example.com/image.png", bin => True);
-   does-ok %res<content>, Buf; # pass
+=begin code :lang<perl6>
+
+my %res = $http.get("http://example.com/image.png", bin => True);
+does-ok %res<content>, Buf; # pass
+
+=end code
 
 And decode C<< %res<content> >> by yourself if you want.
 
