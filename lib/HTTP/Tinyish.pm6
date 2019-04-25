@@ -1,5 +1,5 @@
 use v6;
-unit class HTTP::Tinyish:ver<0.1.3>:auth<cpan:SKAJI>;
+unit class HTTP::Tinyish:ver<0.1.4>:auth<cpan:SKAJI>;
 use HTTP::Tinyish::Curl;
 
 has $.backend handles <request get head put post delete mirror>;
