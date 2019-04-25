@@ -15,7 +15,7 @@ if $HTTBIN_HOST eq "httpbin.org" {
 }
 
 subtest {
-    my $url = "https://doc.perl6.org/images/camelia-small.png";
+    my $url = "https://metacpan.org/static/icons/metacpan-icon.png";
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 200;
     my $buf = %res<content>;
