@@ -111,6 +111,7 @@ method !build-options($factory, $url, *%opts) {
     my @options =
         '--location',
         '--silent',
+        '--show-error',
         '--max-time', $!timeout,
         '--max-redirs', $!max-redirect,
         '--user-agent', $!agent,
