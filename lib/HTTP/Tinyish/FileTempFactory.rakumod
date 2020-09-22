@@ -1,4 +1,3 @@
-use v6;
 unit class HTTP::Tinyish::FileTempFactory;
 use File::Temp;
 

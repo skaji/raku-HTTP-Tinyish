@@ -1,16 +1,16 @@
-[![Build Status](https://travis-ci.org/skaji/perl6-HTTP-Tinyish.svg?branch=master)](https://travis-ci.org/skaji/perl6-HTTP-Tinyish)
+[![Actions Status](https://github.com/skaji/raku-HTTP-Tinyish/workflows/test/badge.svg)](https://github.com/skaji/raku-HTTP-Tinyish/actions)
 
 NAME
 ====
 
-HTTP::Tinyish - perl6 port of HTTP::Tinyish
+HTTP::Tinyish - Raku port of HTTP::Tinyish
 
 SYNOPSIS
 ========
 
 Synchronous way:
 
-```perl6
+```raku
 my $http = HTTP::Tinyish.new(agent => "Mozilla/4.0");
 
 my %res = $http.get("http://www.cpan.org/");
@@ -30,13 +30,13 @@ $http.mirror:
 
 Asynchronous way:
 
-```perl6
+```raku
 my $http = HTTP::Tinyish.new(:async);
 
 my @url = <
-  http://perl6.org/
-  https://doc.perl6.org/
-  http://design.perl6.org/
+  https://raku.org/
+  https://doc.raku.org/
+  https://design.raku.org/
 >;
 
 my @promise = @url.map: -> $url {
@@ -53,16 +53,16 @@ my @res = await @promise;
 DESCRIPTION
 ===========
 
-HTTP::Tinyish is perl6 port of [https://github.com/miyagawa/HTTP-Tinyish](https://github.com/miyagawa/HTTP-Tinyish). Currently only support curl.
+HTTP::Tinyish is a Raku port of [https://github.com/miyagawa/HTTP-Tinyish](https://github.com/miyagawa/HTTP-Tinyish). Currently only support curl.
 
 Str VS Buf
 ----------
 
-Perl6 distinguishes Str from Buf. HTTP::Tinyish handles data as Str by default (that is, encode/decode utf-8 if needed by default). If you want to handle data as Buf, please follow the instruction below.
+Raku distinguishes Str from Buf. HTTP::Tinyish handles data as Str by default (that is, encode/decode utf-8 if needed by default). If you want to handle data as Buf, please follow the instruction below.
 
 If you want to send Buf content, just specify Buf in content:
 
-```perl6
+```raku
 my $binary-data = "file.bin".IO.slurp(:bin);
 $http.post:
   "http://example.com/post",
@@ -72,7 +72,7 @@ $http.post:
 
 If you want to recieve http content as Buf, then call request/get/post/... method with `bin => True `:
 
-```perl6
+```raku
 my %res = $http.get("http://example.com/image.png", bin => True);
 does-ok %res<content>, Buf; # pass
 ```

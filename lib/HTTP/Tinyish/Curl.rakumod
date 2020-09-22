@@ -1,4 +1,3 @@
-use v6;
 use HTTP::Tinyish::Base;
 use HTTP::Tinyish::FileTempFactory;
 
