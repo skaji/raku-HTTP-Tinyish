@@ -1,4 +1,3 @@
-use v6;
 unit class HTTP::Tinyish::Base;
 
 BEGIN {

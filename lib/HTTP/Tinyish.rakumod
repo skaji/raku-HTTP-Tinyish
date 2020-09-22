@@ -1,4 +1,3 @@
-use v6;
 unit class HTTP::Tinyish:ver<0.1.4>:auth<cpan:SKAJI>;
 use HTTP::Tinyish::Curl;
 
@@ -6,7 +5,7 @@ has $.backend handles <request get head put post delete mirror>;
 
 # TODO:
 # perl5 HTTP::Tinyish's main feature is to select backends according to scheme (http/https).
-# perl6 HTTP::Tinyish should follow that.
+# raku HTTP::Tinyish should follow that.
 # But there is only 1 backend right now, ooops!
 
 method new(*%opt) {
@@ -18,13 +17,13 @@ method new(*%opt) {
 
 =head1 NAME
 
-HTTP::Tinyish - perl6 port of HTTP::Tinyish
+HTTP::Tinyish - Raku port of HTTP::Tinyish
 
 =head1 SYNOPSIS
 
 Synchronous way:
 
-=begin code :lang<perl6>
+=begin code :lang<raku>
 
 my $http = HTTP::Tinyish.new(agent => "Mozilla/4.0");
 
@@ -46,14 +45,14 @@ $http.mirror:
 
 Asynchronous way:
 
-=begin code :lang<perl6>
+=begin code :lang<raku>
 
 my $http = HTTP::Tinyish.new(:async);
 
 my @url = <
-  http://perl6.org/
-  https://doc.perl6.org/
-  http://design.perl6.org/
+  https://raku.org/
+  https://doc.raku.org/
+  https://design.raku.org/
 >;
 
 my @promise = @url.map: -> $url {
@@ -70,19 +69,19 @@ my @res = await @promise;
 
 =head1 DESCRIPTION
 
-HTTP::Tinyish is perl6 port of L<https://github.com/miyagawa/HTTP-Tinyish>.
+HTTP::Tinyish is a Raku port of L<https://github.com/miyagawa/HTTP-Tinyish>.
 Currently only support curl.
 
 =head2 Str VS Buf
 
-Perl6 distinguishes Str from Buf.
+Raku distinguishes Str from Buf.
 HTTP::Tinyish handles data as Str by default
 (that is, encode/decode utf-8 if needed by default).
 If you want to handle data as Buf, please follow the instruction below.
 
 If you want to send Buf content, just specify Buf in content:
 
-=begin code :lang<perl6>
+=begin code :lang<raku>
 
 my $binary-data = "file.bin".IO.slurp(:bin);
 $http.post:
@@ -95,7 +94,7 @@ $http.post:
 If you want to recieve http content as Buf, then call request/get/post/... method with
 C<< bin => True >>:
 
-=begin code :lang<perl6>
+=begin code :lang<raku>
 
 my %res = $http.get("http://example.com/image.png", bin => True);
 does-ok %res<content>, Buf; # pass

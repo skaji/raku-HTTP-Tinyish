@@ -8,18 +8,18 @@
     "File::Temp",
     "curl:from<bin>"
   ],
-  "description" : "perl6 port of HTTP::Tinyish",
+  "description" : "Raku port of HTTP::Tinyish",
   "license" : "Artistic-2.0",
   "name" : "HTTP::Tinyish",
-  "perl" : "6.c",
+  "perl" : "6.d",
   "provides" : {
-    "HTTP::Tinyish" : "lib/HTTP/Tinyish.pm6",
-    "HTTP::Tinyish::Base" : "lib/HTTP/Tinyish/Base.pm6",
-    "HTTP::Tinyish::Curl" : "lib/HTTP/Tinyish/Curl.pm6",
-    "HTTP::Tinyish::FileTempFactory" : "lib/HTTP/Tinyish/FileTempFactory.pm6"
+    "HTTP::Tinyish" : "lib/HTTP/Tinyish.rakumod",
+    "HTTP::Tinyish::Base" : "lib/HTTP/Tinyish/Base.rakumod",
+    "HTTP::Tinyish::Curl" : "lib/HTTP/Tinyish/Curl.rakumod",
+    "HTTP::Tinyish::FileTempFactory" : "lib/HTTP/Tinyish/FileTempFactory.rakumod"
   },
   "resources" : [ ],
-  "source-url" : "git://github.com/skaji/perl6-HTTP-Tinyish.git",
+  "source-url" : "https://github.com/skaji/raku-HTTP-Tinyish.git",
   "tags" : [
     "CPAN5"
   ],

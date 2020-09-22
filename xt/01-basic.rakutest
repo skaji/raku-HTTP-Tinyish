@@ -1,18 +1,10 @@
-use v6;
 use Test;
 use HTTP::Tinyish;
 use File::Temp;
 use JSON::Pretty;
 
 my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
-
-if $HTTBIN_HOST eq "httpbin.org" {
-    my $proc = run <curl -m 2 -sSL http://httpbin.org>, :err, :!out;
-    if $proc.exitcode != 0 {
-        plan skip-all => $proc.err.slurp(:close);
-        exit;
-    }
-}
+my $IS_HTTBIN = $HTTBIN_HOST eq "httpbin.org";
 
 my %res = HTTP::Tinyish.new.get("http://www.cpan.org");
 is %res<status>, 200;
@@ -89,11 +81,13 @@ is %res<status>, 401;
 is %res<status>, 200;
 is-deeply from-json(%res<content>), { authenticated => True, user => "user" };
 
-%res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/redirect/1");
-is %res<status>, 200;
+if !$IS_HTTBIN {
+    %res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/redirect/1");
+    is %res<status>, 200;
 
-%res = HTTP::Tinyish.new(max-redirect => 2).get("http://$HTTBIN_HOST/redirect/3");
-isnt %res<status>, 200; # either 302 or 599
+    %res = HTTP::Tinyish.new(max-redirect => 2).get("http://$HTTBIN_HOST/redirect/3");
+    isnt %res<status>, 200; # either 302 or 599
+}
 
 %res = HTTP::Tinyish.new(timeout => 1).get("http://$HTTBIN_HOST/delay/2");
 like %res<status>.Str, rx/^5/;
