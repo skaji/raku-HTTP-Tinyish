@@ -22,22 +22,20 @@ subtest {
         content => "あいうえお".encode,
     ;
     is %res<status>, 200;
-    is-deeply from-json(%res<content>)<data>, "あいうえお";
+    isa-ok %res<content>, Str;
+    is from-json(%res<content>)<data>, "あいうえお";
 };
 
 subtest {
-    my ($file, $fh) = tempfile;
-    $fh.print("あいうえお\n");
-    $fh.close;
     my $url = "http://$HTTBIN_HOST/put";
     my %res = HTTP::Tinyish.new.put: $url,
         headers => { 'Content-Type' => 'text/plain; charset=utf-8' },
-        content => $file.IO.slurp(:bin),
+        content => "あいうえお".encode,
         bin     => True,
     ;
     is %res<status>, 200;
     does-ok %res<content>, Buf;
-    is-deeply from-json(%res<content>.decode)<data>, "あいうえお\n";
+    is from-json(%res<content>.decode)<data>, "あいうえお";
 };
 
 subtest {

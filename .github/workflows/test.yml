@@ -12,23 +12,21 @@ jobs:
   raku:
     strategy:
       matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
         raku-version:
           - 'latest'
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: Raku/setup-raku@v1
         with:
           raku-version: ${{ matrix.raku-version }}
-      - name: Prepare httpbin
-        run: |
-          set -eux
-          docker pull kennethreitz/httpbin
-          docker run -d -p 8080:80 kennethreitz/httpbin
-          docker ps -a
       - name: Install Dependencies
         run: zef install --/test --test-depends --deps-only .
       - name: Install App::Prove6 and JSON::Pretty
         run: zef install --/test App::Prove6 JSON::Pretty
       - name: Run Tests
-        run: env HTTPBIN_HOST=localhost:8080 prove6 -l t xt
+        run: prove6 -l t xt

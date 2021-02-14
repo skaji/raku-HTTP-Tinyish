@@ -11,8 +11,8 @@ method tempfile(Bool :$unlink = True) {
 
 method cleanup() {
     for @!tempfile -> ($file, $fh) {
-        $file.IO.unlink if $file.IO.e;
         $fh.close if $fh;
+        $file.IO.unlink if $file.IO.e;
     }
     @!tempfile = Empty;
 }
