@@ -1,28 +1,31 @@
 {
-  "auth" : "cpan:SKAJI",
-  "authors" : [
+  "auth": "cpan:SKAJI",
+  "authors": [
     "Shoichi Kaji"
   ],
-  "build-depends" : [ ],
-  "depends" : [
+  "build-depends": [
+  ],
+  "depends": [
     "File::Temp",
     "curl:from<bin>"
   ],
-  "description" : "Raku port of HTTP::Tinyish",
-  "license" : "Artistic-2.0",
-  "name" : "HTTP::Tinyish",
-  "perl" : "6.d",
-  "provides" : {
-    "HTTP::Tinyish" : "lib/HTTP/Tinyish.rakumod",
-    "HTTP::Tinyish::Base" : "lib/HTTP/Tinyish/Base.rakumod",
-    "HTTP::Tinyish::Curl" : "lib/HTTP/Tinyish/Curl.rakumod",
-    "HTTP::Tinyish::FileTempFactory" : "lib/HTTP/Tinyish/FileTempFactory.rakumod"
+  "description": "Raku port of HTTP::Tinyish",
+  "license": "Artistic-2.0",
+  "name": "HTTP::Tinyish",
+  "perl": "6.d",
+  "provides": {
+    "HTTP::Tinyish": "lib/HTTP/Tinyish.rakumod",
+    "HTTP::Tinyish::Base": "lib/HTTP/Tinyish/Base.rakumod",
+    "HTTP::Tinyish::Curl": "lib/HTTP/Tinyish/Curl.rakumod",
+    "HTTP::Tinyish::FileTempFactory": "lib/HTTP/Tinyish/FileTempFactory.rakumod"
   },
-  "resources" : [ ],
-  "source-url" : "https://github.com/skaji/raku-HTTP-Tinyish.git",
-  "tags" : [
+  "resources": [
+  ],
+  "source-url": "https://github.com/skaji/raku-HTTP-Tinyish.git",
+  "tags": [
     "CPAN5"
   ],
-  "test-depends" : [ ],
-  "version" : "0.2.0"
+  "test-depends": [
+  ],
+  "version": "0.3.0"
 }
