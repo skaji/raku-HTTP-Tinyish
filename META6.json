@@ -7,7 +7,8 @@
   ],
   "depends": [
     "File::Temp",
-    "curl:from<bin>"
+    "File::Which",
+    "HTTP::Tiny"
   ],
   "description": "Raku port of HTTP::Tinyish",
   "license": "Artistic-2.0",
@@ -17,6 +18,7 @@
     "HTTP::Tinyish": "lib/HTTP/Tinyish.rakumod",
     "HTTP::Tinyish::Base": "lib/HTTP/Tinyish/Base.rakumod",
     "HTTP::Tinyish::Curl": "lib/HTTP/Tinyish/Curl.rakumod",
+    "HTTP::Tinyish::HTTPTiny": "lib/HTTP/Tinyish/HTTPTiny.rakumod",
     "HTTP::Tinyish::FileTempFactory": "lib/HTTP/Tinyish/FileTempFactory.rakumod"
   },
   "resources": [

@@ -3,6 +3,8 @@ use Test;
 use File::Temp;
 use JSON::Pretty;
 
+my $*HTTP-TINYISH-PREFERRED-BACKEND = $_ with %*ENV<HTTP_TINYISH_PREFERRED_BACKEND>;
+
 my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
 
 subtest {

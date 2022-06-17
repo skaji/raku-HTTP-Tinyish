@@ -1,16 +1,57 @@
 unit class HTTP::Tinyish:ver<0.3.0>:auth<cpan:SKAJI>;
-use HTTP::Tinyish::Curl;
 
-has $.backend handles <request get head put post delete mirror>;
+my $*HTTP-TINYISH-PREFERRED-BACKEND;
 
-# TODO:
-# perl5 HTTP::Tinyish's main feature is to select backends according to scheme (http/https).
-# raku HTTP::Tinyish should follow that.
-# But there is only 1 backend right now, ooops!
+my %BACKENDS;
 
-method new(*%opt) {
-    my $backend = HTTP::Tinyish::Curl.new(|%opt);
-    self.bless(:$backend);
+has Capture $!capture;
+
+# Store arguments passed to the constructor for building backends
+submethod TWEAK (|c) { $!capture = c }
+
+method delete ( $url, |c ) { self!backend-for($url).delete: $url, |c }
+method get    ( $url, |c ) { self!backend-for($url).get:    $url, |c }
+method head   ( $url, |c ) { self!backend-for($url).head:   $url, |c }
+method mirror ( $url, |c ) { self!backend-for($url).mirror: $url, |c }
+method patch  ( $url, |c ) { self!backend-for($url).patch:  $url, |c }
+method post   ( $url, |c ) { self!backend-for($url).post:   $url, |c }
+method put    ( $url, |c ) { self!backend-for($url).put:    $url, |c }
+
+method request ( $method, $url, |c ) {
+    self!backend-for($url).request: $method, $url, |c;
+}
+
+method !backend-for ($url) is hidden-from-backtrace {
+    $url ~~ / ^ $<scheme> = ( https? ) '://' /
+        or die "URL Scheme '$url' not supported.";
+
+    once {
+        my $lock = Lock.new;
+        for < Curl HTTPTiny >.map: { "HTTP::Tinyish::$_" } -> $backend {
+            $lock.lock;
+            require ::($backend);
+            $lock.unlock;
+
+            next if ::($backend) ~~ Failure;
+
+            my %meta = ::($backend).configure;
+
+            for %meta.keys -> $scheme {
+                %BACKENDS{$scheme} //= [];
+                %BACKENDS{$scheme}.push: ::($backend);
+            }
+        }
+    }
+
+    my $matcher = $*HTTP-TINYISH-PREFERRED-BACKEND
+        ?? { .^name ~~ $*HTTP-TINYISH-PREFERRED-BACKEND }
+        !! *;
+
+    my $backend = %BACKENDS{ ~$<scheme> }.first($matcher);
+
+    die "No backend configured for scheme $<scheme>" if $backend === Any;
+
+    $backend.new: |$!capture;
 }
 
 =begin pod
@@ -70,7 +111,9 @@ my @res = await @promise;
 =head1 DESCRIPTION
 
 HTTP::Tinyish is a Raku port of L<https://github.com/miyagawa/HTTP-Tinyish>.
-Currently only support curl.
+It provides a common API for multiple backend HTTP clients, which are selected
+based on their availability and the features they support. Currently, it supports
+C<curl> and HTTP::Tiny.
 
 =head2 Str VS Buf
 

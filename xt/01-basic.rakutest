@@ -3,6 +3,8 @@ use HTTP::Tinyish;
 use File::Temp;
 use JSON::Pretty;
 
+my $*HTTP-TINYISH-PREFERRED-BACKEND = $_ with %*ENV<HTTP_TINYISH_PREFERRED_BACKEND>;
+
 my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
 my $IS_HTTBIN = $HTTBIN_HOST eq "httpbin.org";
 
@@ -89,8 +91,11 @@ if !$IS_HTTBIN {
     isnt %res<status>, 200; # either 302 or 599
 }
 
-%res = HTTP::Tinyish.new(timeout => 1).get("http://$HTTBIN_HOST/delay/2");
-like %res<status>.Str, rx/^5/;
+{
+    todo 'HTTP::Tiny does not support timeouts' if ( $*HTTP-TINYISH-PREFERRED-BACKEND // '' ).ends-with: 'HTTPTiny';
+    %res = HTTP::Tinyish.new(timeout => 1).get("http://$HTTBIN_HOST/delay/2");
+    like %res<status>.Str, rx/^5/;
+}
 
 %res = HTTP::Tinyish.new.get("http://$HTTBIN_HOST/encoding/utf8");
 like %res<content>, rx/コンニチハ/;

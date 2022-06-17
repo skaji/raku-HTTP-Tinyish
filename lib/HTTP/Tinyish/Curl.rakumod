@@ -1,12 +1,13 @@
 use HTTP::Tinyish::Base;
 use HTTP::Tinyish::FileTempFactory;
+use File::Which;
 
 unit class HTTP::Tinyish::Curl is HTTP::Tinyish::Base;
 
 my constant DEBUG = %*ENV<HTTP_TINYISH_DEBUG>;
 
+has $!curl = which 'curl';
 has $.async = False;
-has $.curl = "curl";
 has Int $.timeout = 60;
 has Int $.max-redirect = 5;
 has $.agent = $?PACKAGE.perl;
@@ -96,6 +97,21 @@ method mirror($url, $file, Bool :$bin = False, *%opts) {
         my $status = run |@cmd, :out($out-fh), :err($err-fh);
         &process($status);
     }
+}
+
+method configure ( --> Hash ) {
+    my %meta;
+    my $curl = which 'curl';
+
+    return %meta unless $curl;
+
+    my $proc = run $curl, '--version', :out;
+    my $out = $proc.out.slurp: :close;
+
+    %meta<http>  = so $out ~~ /' http ' /;
+    %meta<https> = so $out ~~ /' https '/;
+
+    %meta;
 }
 
 method !build-options($factory, $url, *%opts) {
