@@ -6,7 +6,7 @@ use JSON::Pretty;
 my $HTTBIN_HOST = %*ENV<HTTPBIN_HOST> || "httpbin.org";
 
 subtest {
-    my $url = "https://metacpan.org/static/icons/metacpan-icon.png";
+    my $url = "https://raku.org/camelia-logo.png";
     my %res = HTTP::Tinyish.new.get($url, :bin);
     is %res<status>, 200;
     my $buf = %res<content>;
