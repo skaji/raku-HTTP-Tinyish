@@ -1,5 +1,5 @@
 {
-  "auth": "cpan:SKAJI",
+  "auth": "zef:skaji",
   "authors": [
     "Shoichi Kaji"
   ],
@@ -27,5 +27,5 @@
   ],
   "test-depends": [
   ],
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

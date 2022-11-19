@@ -1,4 +1,4 @@
-unit class HTTP::Tinyish:ver<0.3.0>:auth<cpan:SKAJI>;
+unit class HTTP::Tinyish;
 use HTTP::Tinyish::Curl;
 
 has $.backend handles <request get head put post delete mirror>;

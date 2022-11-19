@@ -2,6 +2,9 @@ Revision history for HTTP-Tinyish
 
 {{$NEXT}}
 
+0.4.0  2022-11-20T01:23:45+09:00
+    - Move to Zef ecosystem
+
 0.3.0  2021-02-14T17:08:14+09:00
     - Improve windows support
 
