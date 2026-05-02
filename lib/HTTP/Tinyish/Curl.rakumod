@@ -9,7 +9,7 @@ has $.async = False;
 has $.curl = "curl";
 has Int $.timeout = 60;
 has Int $.max-redirect = 5;
-has $.agent = $?PACKAGE.perl;
+has $.agent = $?PACKAGE.raku;
 has %.default-headers;
 has Bool $.verify-ssl = True;
 
