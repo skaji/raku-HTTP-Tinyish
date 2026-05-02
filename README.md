@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/skaji/raku-HTTP-Tinyish/workflows/test/badge.svg)](https://github.com/skaji/raku-HTTP-Tinyish/actions)
+[![Actions Status](https://github.com/skaji/raku-HTTP-Tinyish/actions/workflows/test.yml/badge.svg)](https://github.com/skaji/raku-HTTP-Tinyish/actions)
 
 NAME
 ====
