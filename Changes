@@ -2,6 +2,9 @@ Revision history for HTTP-Tinyish
 
 {{$NEXT}}
 
+0.4.1  2026-05-02T17:53:19+09:00
+    - Replace deprecated .perl call with .raku (defaultxr #15)
+
 0.4.0  2022-11-20T01:23:45+09:00
     - Move to Zef ecosystem
 
