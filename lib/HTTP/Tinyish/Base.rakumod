@@ -42,7 +42,7 @@ method parse-http-header($header is copy, %res) {
     %res<protocol> = $proto;
 
     # import headers
-    my $token = rx:P5/[^][\x00-\x1f\x7f()<>@,;:\\"\/?={} \t]+/; # 
+    my $token = rx/ <-[ \x00..\x20 \x7f \[\] ()<>@,;:\\"/?={} ]>+ /;
     my $k;
     for @out <-> $header {
         if $header ~~ s/^($token) \: ' '?// {
