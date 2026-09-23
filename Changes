@@ -2,6 +2,9 @@ Revision history for HTTP-Tinyish
 
 {{$NEXT}}
 
+0.4.2  2026-09-24T08:14:38+09:00
+    - Replace Perl 5 header token regex with native Raku syntax (lizmat #16, #17)
+
 0.4.1  2026-05-02T17:53:19+09:00
     - Replace deprecated .perl call with .raku (defaultxr #15)
 
